@@ -1,0 +1,566 @@
+* {
+  box-sizing: border-box;
+  transform-style: preserve-3d;
+}
+:root {
+  --red-one: #f50008;
+  --red-two: #c20006;
+  --red-three: #8f0005;
+  --grey-one: #e6e6e6;
+  --grey-two: #ccc;
+  --grey-three: #b3b3b3;
+  --grey-four: #999;
+  --grey-five: #808080;
+  --windscreen: #345565;
+  --glow: #f5e0a3;
+  --bg: #0d0d0d;
+  --perspective: 1000;
+  --rotate-x: -15;
+  --rotate-y: -95;
+  --scene-width: 100;
+  --scene-height: 100;
+  --drive: 5;
+  --offset: -0.25;
+}
+.cuboid {
+  --width: 15;
+  --height: 10;
+  --depth: 4;
+  height: calc(var(--depth) * 1vmin);
+  width: calc(var(--width) * 1vmin);
+  transform-style: preserve-3d;
+  position: absolute;
+  font-size: 1rem;
+  transform: translate3d(
+    calc(var(--x, 0) * 1vmin),
+    calc(var(--y, 0) * 1vmin),
+    calc(var(--z, 0) * 1vmin)
+  );
+}
+.cuboid > div:nth-of-type(1) {
+  height: calc(var(--height) * 1vmin);
+  width: 100%;
+  transform-origin: 50% 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateX(-90deg)
+    translate3d(0, 0, calc((var(--depth) / 2) * 1vmin));
+}
+.cuboid > div:nth-of-type(2) {
+  height: calc(var(--height) * 1vmin);
+  width: 100%;
+  transform-origin: 50% 50%;
+  transform: translate(-50%, -50%) rotateX(-90deg) rotateY(180deg)
+    translate3d(0, 0, calc((var(--depth) / 2) * 1vmin));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+.cuboid > div:nth-of-type(3) {
+  height: calc(var(--height) * 1vmin);
+  width: calc(var(--depth) * 1vmin);
+  transform: translate(-50%, -50%) rotateX(-90deg) rotateY(90deg)
+    translate3d(0, 0, calc((var(--width) / 2) * 1vmin));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+.cuboid > div:nth-of-type(4) {
+  height: calc(var(--height) * 1vmin);
+  width: calc(var(--depth) * 1vmin);
+  transform: translate(-50%, -50%) rotateX(-90deg) rotateY(-90deg)
+    translate3d(0, 0, calc((var(--width) / 2) * 1vmin));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+.cuboid > div:nth-of-type(5) {
+  height: calc(var(--depth) * 1vmin);
+  width: calc(var(--width) * 1vmin);
+  transform: translate(-50%, -50%)
+    translate3d(0, 0, calc((var(--height) / 2) * 1vmin));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+.cuboid > div:nth-of-type(6) {
+  height: calc(var(--depth) * 1vmin);
+  width: calc(var(--width) * 1vmin);
+  transform: translate(-50%, -50%)
+    translate3d(0, 0, calc((var(--height) / 2) * -1vmin)) rotateX(180deg);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  perspective: calc(var(--perspective, 1000) * 1px);
+}
+.scene__wrapper {
+  transform: scale(0.8);
+}
+.scene {
+  height: calc(var(--scene-height, 50) * 1vmin);
+  width: calc(var(--scene-width, 50) * 1vmin);
+  transform: rotateX(calc(var(--rotate-x, -34) * 1deg))
+    rotateY(calc(var(--rotate-y, 34) * 1deg)) rotateX(90deg) rotate(180deg);
+}
+.snow {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transform: translate3d(0, 0, 100vmax);
+}
+.snowball {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  height: calc(var(--size) * 1%);
+  width: calc(var(--size) * 1%);
+  -webkit-animation: fall calc(var(--s) * 1s) calc(var(--d) * -1s) infinite
+    linear;
+  animation: fall calc(var(--s) * 1s) calc(var(--d) * -1s) infinite linear;
+}
+.truck__front {
+  height: 8vmin;
+  width: 17vmin;
+  position: absolute;
+  offset-path: path(var(--path));
+  -webkit-animation: travel calc(var(--drive) * 1s) calc(var(--offset) * 1s)
+    infinite linear;
+  animation: travel calc(var(--drive) * 1s) calc(var(--offset) * 1s) infinite
+    linear;
+}
+.truck__front:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(245, 224, 163, 0.75);
+  filter: brightness(1.2) blur(10px);
+  border-radius: 50%;
+  transform: scale(1.25);
+}
+.truck__back {
+  height: 8vmin;
+  width: 26vmin;
+  position: absolute;
+  offset-path: path(var(--path));
+  offset-distance: 0%;
+  -webkit-animation: travel calc(var(--drive) * 1s) infinite linear;
+  animation: travel calc(var(--drive) * 1s) infinite linear;
+}
+.truck__back:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(245, 224, 163, 0.75);
+  filter: brightness(1.2) blur(10px);
+  border-radius: 50%;
+  transform: scale(1.25);
+}
+.truck__logo {
+  position: absolute;
+  width: 70%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.truck__wheels div {
+  background: var(--red-two);
+}
+.truck__wheels div:nth-of-type(1),
+.truck__wheels div:nth-of-type(2) {
+  background: radial-gradient(
+      var(--red-one) 0 30%,
+      #000 32% 65%,
+      transparent 70%
+    )
+    0 0/2vmin 100%;
+}
+.truck__wheels div:nth-of-type(3),
+.truck__wheels div:nth-of-type(4) {
+  background: linear-gradient(var(--red-three) 65%, var(--bg) 70%);
+}
+.truck__wheels div:nth-of-type(6) {
+  background: transparent;
+}
+.truck__wheels--nsf {
+  --height: 2;
+  --width: 2;
+  --depth: 1;
+  --z: 1;
+  --x: 1;
+  --y: 0.5;
+}
+.truck__wheels--osf {
+  --height: 2;
+  --width: 2;
+  --depth: 1;
+  --z: 1;
+  --x: 1;
+  --y: 6.5;
+}
+.truck__wheels--rear {
+  --height: 2;
+  --width: 4;
+  --depth: 7;
+  --z: 1;
+  --y: 0.5;
+  --x: 13;
+}
+.truck__wheels--trailer {
+  --height: 2;
+  --width: 6;
+  --depth: 7;
+  --z: 1;
+  --y: 0.5;
+  --x: 19;
+}
+.truck__bonnet {
+  --height: 3;
+  --z: 2;
+  --depth: 5;
+  --y: 1.5;
+  --x: 0.5;
+  --width: 7;
+}
+.truck__bonnet div {
+  background: var(--red-one);
+}
+.truck__bonnet div:nth-of-type(3),
+.truck__bonnet div:nth-of-type(4) {
+  background: var(--red-three);
+}
+.truck__bonnet div:nth-of-type(4) {
+  background: repeating-linear-gradient(
+      90deg,
+      var(--grey-four) 0 2%,
+      var(--grey-two) 2% 6%,
+      var(--grey-four) 6% 8%
+    )
+    50% 50%/80% 80%;
+  background-repeat: no-repeat;
+  background-color: var(--red-three);
+}
+.truck__bonnet div:nth-of-type(5) {
+  background: var(--red-two);
+}
+.truck__rear-cab {
+  --height: 6;
+  --width: 3;
+  --depth: 6;
+  --x: 7;
+  --y: 1;
+  --z: 4.5;
+}
+.truck__rear-cab div {
+  background: var(--red-one);
+}
+.truck__rear-cab div:nth-of-type(1):after,
+.truck__rear-cab div:nth-of-type(2):after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 0.5vmin solid var(--glow);
+  filter: blur(1.5px);
+  transform: scale(1.025);
+}
+.truck__rear-cab div:nth-of-type(3),
+.truck__rear-cab div:nth-of-type(4) {
+  background: var(--red-three);
+}
+.truck__rear-cab div:nth-of-type(5) {
+  background: var(--red-two);
+}
+.truck__cab {
+  --height: 4;
+  --width: 3;
+  --depth: 5;
+  --z: 3.5;
+  --y: 1.5;
+  --x: 4;
+}
+.truck__cab div {
+  background: var(--red-one);
+}
+.truck__cab div:nth-of-type(3),
+.truck__cab div:nth-of-type(4) {
+  background: var(--red-three);
+}
+.truck__cab div:nth-of-type(1):after,
+.truck__cab div:nth-of-type(2):after {
+  content: "";
+  position: absolute;
+  top: 5%;
+  right: 15%;
+  left: 10%;
+  height: 40%;
+  background: radial-gradient(transparent 0 50%, rgba(255, 255, 255, 0.25))
+    no-repeat;
+  background-color: var(--windscreen);
+}
+.truck__cab div:nth-of-type(4):after {
+  content: "";
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  right: 5%;
+  height: 40%;
+  background: radial-gradient(transparent 0 65%, rgba(255, 255, 255, 0.25))
+    no-repeat;
+  background-color: var(--windscreen);
+}
+.truck__cab div:nth-of-type(5) {
+  background: var(--red-two);
+}
+.truck__cab-top {
+  --height: 1;
+  --width: 2;
+  --depth: 5;
+  --z: 6;
+  --y: 1.5;
+  --x: 5;
+}
+.truck__cab-top div:nth-of-type(3),
+.truck__cab-top div:nth-of-type(4),
+.truck__cab-top div:nth-of-type(5),
+.truck__cab-top div:nth-of-type(6) {
+  background: transparent;
+}
+.truck__cab-top div:nth-of-type(4):after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 220%;
+  background-image: url("https://assets.codepen.io/605876/cola-logo.svg");
+  background-size: contain;
+  background-position: center;
+  background-color: var(--red-two);
+  background-repeat: no-repeat;
+  transform-origin: 50% 100%;
+  transform: rotateX(65deg);
+}
+.truck__cab-top div:nth-of-type(1) {
+  background: linear-gradient(
+    155deg,
+    transparent 0 50%,
+    var(--red-one) 50% 100%
+  );
+}
+.truck__cab-top div:nth-of-type(2) {
+  background: linear-gradient(
+    -155deg,
+    transparent 0 50%,
+    var(--red-one) 50% 100%
+  );
+}
+.truck__chassis {
+  --height: 1;
+  --width: 14;
+  --z: 1;
+  --depth: 5.5;
+  --y: 1.25;
+  --x: 2;
+}
+.truck__chassis div {
+  background: var(--grey-three);
+}
+.truck__chassis div:nth-of-type(5),
+.truck__chassis div:nth-of-type(6) {
+  background: var(--grey-four);
+}
+.truck__bumper div {
+  background: var(--grey-two);
+}
+.truck__bumper div:nth-of-type(5),
+.truck__bumper div:nth-of-type(6) {
+  background: var(--grey-five);
+}
+.truck__bumper div:nth-of-type(1),
+.truck__bumper div:nth-of-type(2) {
+  background: var(--grey-four);
+}
+.truck__bumper--front {
+  --depth: 7;
+  --height: 0.75;
+  --y: 0.5;
+  --width: 0.5;
+  --z: 0.75;
+}
+.truck__bumper--rear {
+  --depth: 7;
+  --height: 0.75;
+  --y: 0.5;
+  --width: 0.5;
+  --z: 0.75;
+  --x: 17;
+}
+.truck__headlight {
+  --depth: 1;
+  --height: 0.5;
+  --width: 0.5;
+  --z: 1.5;
+}
+.truck__headlight div {
+  background: var(--grey-five);
+}
+.truck__headlight div:nth-of-type(1),
+.truck__headlight div:nth-of-type(2) {
+  background: var(--grey-three);
+}
+.truck__headlight div:nth-of-type(5),
+.truck__headlight div:nth-of-type(6) {
+  background: var(--grey-four);
+}
+.truck__headlight div:nth-of-type(4) {
+  background: #fff;
+}
+.truck__headlight div:nth-of-type(4):after {
+  content: "";
+  height: 100%;
+  width: 100%;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: blur(5px);
+}
+.truck__headlight--nsf {
+  --y: 0.5;
+}
+.truck__headlight--osf {
+  --y: 6.5;
+}
+.truck__pipe {
+  --width: 0.5;
+  --depth: 0.5;
+  --height: 7;
+  --x: 9.5;
+  --z: 5.5;
+}
+.truck__pipe--nsf {
+  --y: 0.5;
+}
+.truck__pipe--osf {
+  --y: 7;
+}
+.truck__pipe div {
+  background: var(--grey-two);
+}
+.truck__pipe div:nth-of-type(3),
+.truck__pipe div:nth-of-type(4) {
+  background: var(--grey-three);
+}
+.truck__pipe div:nth-of-type(5) {
+  background: linear-gradient(#000, #000) 30% 30%/60% 60% no-repeat;
+  background-color: var(--grey-five);
+}
+.trailer__bottom {
+  --height: 0.5;
+  --width: 15;
+  --depth: 6;
+  --z: 1.5;
+  --x: 9;
+  --y: 1;
+}
+.trailer__bottom div {
+  background: var(--grey-five);
+}
+.trailer__mid {
+  --height: 1;
+  --width: 17;
+  --depth: 6;
+  --y: 1;
+  --z: 2.5;
+  --x: 9;
+}
+.trailer__mid div {
+  background: var(--red-three);
+}
+.trailer__top {
+  --height: 8;
+  --width: 23;
+  --depth: 8;
+  --z: 6.5;
+  --x: 4;
+}
+.trailer__top div {
+  border: 0.5vmin solid var(--glow);
+  background: var(--red-one);
+}
+.trailer__top div:nth-of-type(3):after {
+  content: "";
+  background-image: url("https://p7.hiclipart.com/preview/764/971/762/the-coca-cola-company-fizzy-drinks-santa-claus-santa-s-sleigh.jpg");
+  background-size: contain;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  overflow: hidden;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  height: 100%;
+  width: 100%;
+}
+.trailer__top div:nth-of-type(3),
+.trailer__top div:nth-of-type(4) {
+  background: var(--red-three);
+}
+.trailer__top div:nth-of-type(5),
+.trailer__top div:nth-of-type(6) {
+  background: var(--red-two);
+}
+.holiday-road {
+  height: 50vmin;
+  width: 50vmin;
+  overflow: visible !important;
+}
+.holiday-road path {
+  stroke: #f00;
+}
+@-webkit-keyframes fall {
+  from {
+    transform: translate3d(0, 0, 0) rotateX(90deg);
+  }
+  to {
+    transform: translate3d(0, 0, -100vmax) rotateX(90deg);
+  }
+}
+@keyframes fall {
+  from {
+    transform: translate3d(0, 0, 0) rotateX(90deg);
+  }
+  to {
+    transform: translate3d(0, 0, -100vmax) rotateX(90deg);
+  }
+}
+@-webkit-keyframes travel {
+  from {
+    offset-distance: 100%;
+  }
+}
+@keyframes travel {
+  from {
+    offset-distance: 100%;
+  }
+}
